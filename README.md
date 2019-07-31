@@ -227,6 +227,47 @@ export default Counter;
 
 <br/>
 
+# 스토어의 특정 값이나 함수만 넣어주고 싶다면
+
+마치 리덕스에서의 mapStateToProps / mapDispatchToProps 처럼 스토어의 특정 값이나 함수만 넣어주고 싶다면 이렇게 하실 수도 있습니다.
+
+### **src/Counter.js**
+
+```javascript
+import React, { Component } from 'react';
+import { observer, inject } from 'mobx-react';
+
+// **** 함수형태로 파라미터를 전달해주면 특정 값만 받아올 수 있음.
+@inject(stores => ({
+  number: stores.counter.number,
+  increase: stores.counter.increase,
+  decrease: stores.counter.decrease,
+}))
+@observer
+class Counter extends Component {
+  render() {
+    const { number, increase, decrease } = this.props;
+    return (
+      <div>
+        <h1>{number}</h1>
+        <button onClick={increase}>+1</button>
+        <button onClick={decrease}>-1</button>
+      </div>
+    );
+  }
+}
+
+export default Counter;
+```
+
+이제 컴포넌트는, 유저 인터페이스와, 인터랙션만 관리하면 되고 상태 관련 로직은 모두 스토어로 분리되었습니다.
+
+리덕스에서는, 우리가 프리젠테이셔널 컴포넌트 / 컨테이너 컴포넌트 라는 개념에 대해서 알아보았었습니다. 단순히 props 값을 가져오기만 해서 받아오는 컴포넌트는 프리젠테이셔널 컴포넌트라고 부르고, 스토어에서 부터 값이나 액션 생성함수를 받아오는 컴포넌트를 컨테이너 컴포넌트라고 부른다고 했었죠.
+
+리덕스 진영에서는, 문서에서도 그렇고 생태계 쪽에서도 그렇고 프리젠테이셔널 / 컨테이너로 분리해서 작성하는게 일반적입니다. 반면, MobX 에서는, 딱히 그런걸 명시하지 않습니다. 그래서, 굳이 번거롭게 컨테이너를 강제적으로 만드실 필요는 없습니다. 하지만, 하셔도 무방합니다!
+
+<br/>
+
 # MobX 의 주요 개념들
 
 1. Observable State (관찰 받고 있는 상태)
