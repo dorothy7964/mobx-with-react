@@ -71,6 +71,10 @@ decorator 를 사용하면 훨씬 더 편하게 문법을 작성 할 수 있는�
 그러려면 babel 설정을 해주셔야 합니다. babel 설정을 커스터마이징 하려면 yarn eject 를 해야합니다.
 
 ```javascript
+yarn eject
+```
+
+```javascript
 yarn add @babel/plugin-proposal-class-properties @babel/plugin-proposal-decorators
 ```
 
