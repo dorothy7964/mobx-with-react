@@ -2,34 +2,7 @@
 
 리액트 상태 관리 라이브러리  
 "MobX 는 최소한의 공수로 여러분들의 상태관리 시스템을 설계 할 수 있게 해줍니다."  
-
-<br/>
-
-# MobX 의 주요 개념들
-
-1. Observable State (관찰 받고 있는 상태)
-
-    MobX 에서는 정확히 **어떤 부분이 바뀌었는지** 알 수 있습니다.   
-    그 값이, 원시적인 값이던, 객체이던, 배열 내부의 객체이던 객체의 키이던 간에 말이죠.  
-
-2. Computed Value (연산된 값)
-
-    기존의 상태값과 다른 연산된 값에 기반하여 만들어질 수 있는 값입니다.  
-    주로 **성능 최적화**를 위하여 많이 사용됩니다.  
-
-3. Reactions (반응)
-
-    Reactions 는 Computed Value 와 비슷한데,    
-    **Computed Value 의 경우는 우리가 특정 값을 연산해야 될 때 에만 처리**가 되는 반면에,  
-    **Reactions 은, 값이 바뀜에 따라 해야 할 일을 정하는 것**을 의미합니다.   
-
-4. Actions (액션; 행동)
-
-    액션은, **상태에 변화를 일으키는것**을 말합니다.  
-    만약에 Observable State 에 변화를 일으키는 코드를 호출한다? 이것은 하나의 액션입니다.   
-    리덕스에서의 액션과 달리 따로 객체형태로 만들지는 않습니다.
-
-<br/>
+<br>
 
 # MobX 라이브러리 설치
 
@@ -166,13 +139,121 @@ class Counter extends Component {
 // **** observer 는 코드의 상단으로 올라갑니다.
 export default Counter;
 ```
-
 우선 우리가 이 튜토리얼의 상단부에서 다뤘던것처럼 decorator 사용은 필수는 아니라는 점
+
+<br/>
+
+# MobX 스토어 분리시키기
+
+MobX 에도 리덕스처럼 스토어라는 개념이 있습니다.   
+리덕스는 하나의 앱에는 단 하나의 스토어만 있지만, MobX 에서는 여러개를 만들어도 됩니다.  
+
+## 스토어 만들기
+
+MobX 에서 스토어를 만드는건 생각보다 간단합니다.   
+리덕스처럼 리듀서나, 액션 생성함수.. 그런건 없습니다. 그냥 하나의 클래스에 observable 값이랑 함수들을 만들어주면 끝!  
+
+### **stores/counter.js**
+
+```javascript
+import { observable, action } from 'mobx';
+
+export default class CounterStore {
+  @observable number = 0;
+
+  @action increase = () => {
+    this.number++;
+  }
+
+  @action decrease = () => {
+    this.number--;
+  }
+}
+```
+
+## Provider 로 프로젝트에 스토어 적용
+
+MobX에서 프로젝트에 스토어를 적용 할 때는, Redux 처럼 Provider 라는 컴포넌트를 사용합니다.  
+
+### **src/index.js**
+
+```javascript
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Provider } from 'mobx-react'; // MobX 에서 사용하는 Provider
+import App from './App';
+import CounterStore from './stores/counter'; // 방금 만든 스토어 불러와줍니다.
+
+const counter = new CounterStore(); // 스토어 인스턴스를 만들고
+
+ReactDOM.render(
+  <Provider counter={counter}>
+    {/* Provider 에 props 로 넣어줍니다. */}
+    <App />
+  </Provider>,
+  document.getElementById('root')
+);
+```
+
+## inject 로 컴포넌트에 스토어 주입
+
+inject 함수는 mobx-react 에 있는 함수로서, 컴포넌트에서 스토어에 접근할 수 있게 해줍니다. 정확히는, 스토어에 있는 값을 컴포넌트의 props 로 "주입"을 해줍니다.
+
+### **stores/Counter.js**
+
+```javascript
+import React, { Component } from 'react';
+import { observer, inject } from 'mobx-react';
+
+@inject('counter')
+@observer
+class Counter extends Component {
+  render() {
+    const { counter } = this.props;
+    return (
+      <div>
+        <h1>{counter.number}</h1>
+        <button onClick={counter.increase}>+1</button>
+        <button onClick={counter.decrease}>-1</button>
+      </div>
+    );
+  }
+}
+
+export default Counter;
+```
+
+위와 같이 inject('스토어이름') 을 하시면 컴포넌트에서 해당 스토어를 props 로 전달받아서 사용 할 수 있게 됩니다.
+
+<br/>
+
+# MobX 의 주요 개념들
+
+1. Observable State (관찰 받고 있는 상태)
+
+    MobX 에서는 정확히 **어떤 부분이 바뀌었는지** 알 수 있습니다.   
+    그 값이, 원시적인 값이던, 객체이던, 배열 내부의 객체이던 객체의 키이던 간에 말이죠.  
+
+2. Computed Value (연산된 값)
+
+    기존의 상태값과 다른 연산된 값에 기반하여 만들어질 수 있는 값입니다.  
+    주로 **성능 최적화**를 위하여 많이 사용됩니다.  
+
+3. Reactions (반응)
+
+    Reactions 는 Computed Value 와 비슷한데,    
+    **Computed Value 의 경우는 우리가 특정 값을 연산해야 될 때 에만 처리**가 되는 반면에,  
+    **Reactions 은, 값이 바뀜에 따라 해야 할 일을 정하는 것**을 의미합니다.   
+
+4. Actions (액션; 행동)
+
+    액션은, **상태에 변화를 일으키는것**을 말합니다.  
+    만약에 Observable State 에 변화를 일으키는 코드를 호출한다? 이것은 하나의 액션입니다.   
+    리덕스에서의 액션과 달리 따로 객체형태로 만들지는 않습니다.
 
 <br>
 
 # 리액트 없이 MobX 사용해보기
-
 리덕스와 마찬가지로, MobX 는 리액트 종속적인 라이브러리가 아닙니다.   
 그냥 따로 쓸 수도 있어요. **UI 프레임워크 / 라이브러리 없이** 쓰셔도 되고,   
 Vue, Angular 등이랑 써도 전혀 무방합니다.  
@@ -368,6 +449,7 @@ a 값이 20 로 바뀌었네요!
 ```
 
 <br/>
+
 
 # class 문법을 사용해서 조금 더 깔끔하게
 
