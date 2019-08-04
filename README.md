@@ -10,6 +10,21 @@
 yarn add mobx mobx-react
 ```
 
+
+## mobx
+
+**`decorate`**    decorate 를 통해서 각 값에 MobX 함수 적용  
+**`observable`**  관찰 받고 있는 상태  
+**`action`**  액션; 행동  
+
+
+## mobx-react
+
+**`observer`**    observer 가 observable 값이 변할 때 컴포넌트의 forceUpdate 를 호출하게 함으로써 자동으로 변화가 화면에 반영  
+**`inject`**  mobx-react 에 있는 함수로서, 컴포넌트에서 스토어에 접근할 수 있게 해줍니다.   
+**`Provider`**    MobX에서 프로젝트에 스토어를 적용 할 때는, Redux 처럼 Provider 라는 컴포넌트를 사용  
+
+
 우리가 만약에 create-react-app 으로 프로젝트를 만들면 기본적으로는 decorator 를 사용하지 못하기 때문에 따로 babel 설정을 해줘야 합니다.
 
 <br/>
