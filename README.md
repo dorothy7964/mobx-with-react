@@ -31,7 +31,9 @@ yarn add mobx mobx-react
 
 # MobX - decorate 사용
 
-decorator 를 사용하면 훨씬 더 편하게 문법을 작성 할 수 있는데요, 그러려면 babel 설정을 해주셔야 합니다. babel 설정을 커스터마이징 하려면 yarn eject 를 해야합니다.
+**decorator 를 사용하**면 훨씬 더 편하게 문법을 작성 할 수 있는데요,   
+그러려면 babel 설정을 해주셔야 합니다.   
+`babel` 설정을 커스터마이징 하려면 `yarn eject` 를 해야합니다.
 
 ### **src/Counter.js**
 
@@ -71,19 +73,25 @@ decorate(Counter, {
 export default observer(Counter);
 ```
 
-setState 없이 그냥 값 바꿔주면 알아서 렌더링해줍니다. 어떻게 알아서 렌더링해주냐구요? 
-코드 최하단에서 사용된 observer 가 observable 값이 변할 때 컴포넌트의 forceUpdate 를 호출하게 함으로써 자동으로 변화가 화면에 반영됩니다.
+setState 없이 그냥 값 바꿔주면 알아서 렌더링해줍니다.   
+어떻게 알아서 렌더링해주냐구요? 
 
-이게 성능상으로 과연 좋을까 걱정이 될 수도 있긴 하지만 놀랍게도 최적화가 많이 되어있어서 그 부분에 대해서는 크게 걱정하실 필요없습니다.
+**코드 최하단에서 사용된 observer 가 observable 값이 변할 때**   
+**컴포넌트의 forceUpdate 를 호출하게 함으로써 자동으로 변화가 화면에 반영**됩니다.
 
-이런식으로, 리액트에서 MobX 를 사용할 땐 리덕스에서 했던 것 처럼 따로 다른 파일로 스토어를 만들 필요도 없고 (필요하면 만들 수도 있습니다) 그냥 컴포넌트에 바로 적용해줄 수 있습니다.
+이게 성능상으로 과연 좋을까 걱정이 될 수도 있긴 하지만 놀랍게도   
+최적화가 많이 되어있어서 그 부분에 대해서는 크게 걱정하실 필요없습니다.
+
+이런식으로, 리액트에서 **MobX 를 사용할 땐 리덕스에서 했던 것 처럼**   
+**따로 다른 파일로 스토어를 만들 필요도 없고 (필요하면 만들 수도 있습니다**   
+**그냥 컴포넌트에 바로 적용**해줄 수 있습니다.
 
 <br/>
 
 # Decorator 와 함께 사용하기
 
 decorator 를 사용하면 훨씬 더 편하게 문법을 작성 할 수 있는데요,  
-그러려면 babel 설정을 해주셔야 합니다. babel 설정을 커스터마이징 하려면 yarn eject 를 해야합니다.
+그러려면 `babel` 설정을 해주셔야 합니다. babel 설정을 커스터마이징 하려면 `yarn eject` 를 해야합니다.
 
 [Create-react-app V2 릴리즈!](https://velog.io/@velopert/create-react-app-v2)
 [create-react-app 에서 eject 명령으로 설정 파일 추출](https://blog.grotesq.com/post/691)
@@ -92,11 +100,13 @@ decorator 를 사용하면 훨씬 더 편하게 문법을 작성 할 수 있는�
 yarn eject
 ```
 
-```javascript
-yarn add @babel/plugin-proposal-class-properties @babel/plugin-proposal-decorators
-```
+[참고]  
 
-그리고 나서, package.json 을 열으신 다음에, babel 쪽을 찾아서 다음과 같이 수정해주세요.
+1. yarn eject 하기 전 git 에 push 하라고 나온다 push 후 다시 yarn eject 설치하기
+
+2. Are you sure you want to eject? This action is permanent **yes**
+
+3. 설치하고 나서, `package.json` 을 열으신 다음에, `babel` 쪽을 찾아서 다음과 같이 수정해주기
 
 ```javascript
 "babel": {
@@ -109,6 +119,17 @@ yarn add @babel/plugin-proposal-class-properties @babel/plugin-proposal-decorato
   ]
 }
 ```
+
+4. `yarn start` 한 후, Cannot find module 에 뜨는 것들을 설치해주기(반복해서 하기) 
+
+5. 다 끝난 후 아래 설치해주기
+
+```javascript
+yarn add @babel/plugin-proposal-class-properties @babel/plugin-proposal-decorators
+```
+
+<br/>
+
 ### **src/Counter.js**
 
 ```javascript
@@ -161,12 +182,14 @@ export default Counter;
 # MobX 스토어 분리시키기
 
 MobX 에도 리덕스처럼 스토어라는 개념이 있습니다.   
-리덕스는 하나의 앱에는 단 하나의 스토어만 있지만, MobX 에서는 여러개를 만들어도 됩니다.  
+리덕스는 하나의 앱에는 단 하나의 스토어만 있지만,  
+ MobX 에서는 여러개를 만들어도 됩니다.  
 
 ## 스토어 만들기
 
 MobX 에서 스토어를 만드는건 생각보다 간단합니다.   
-리덕스처럼 리듀서나, 액션 생성함수.. 그런건 없습니다. 그냥 하나의 클래스에 observable 값이랑 함수들을 만들어주면 끝!  
+리덕스처럼 리듀서나, 액션 생성함수.. 그런건 없습니다.   
+그냥 하나의 클래스에 observable 값이랑 함수들을 만들어주면 끝!  
 
 ### **stores/counter.js**
 
@@ -188,7 +211,8 @@ export default class CounterStore {
 
 ## Provider 로 프로젝트에 스토어 적용
 
-MobX에서 프로젝트에 스토어를 적용 할 때는, Redux 처럼 Provider 라는 컴포넌트를 사용합니다.  
+MobX에서 프로젝트에 스토어를 적용 할 때는,   
+Redux 처럼 Provider 라는 컴포넌트를 사용합니다.  
 
 ### **src/index.js**
 
@@ -212,7 +236,9 @@ ReactDOM.render(
 
 ## inject 로 컴포넌트에 스토어 주입
 
-inject 함수는 mobx-react 에 있는 함수로서, 컴포넌트에서 스토어에 접근할 수 있게 해줍니다. 정확히는, 스토어에 있는 값을 컴포넌트의 props 로 "주입"을 해줍니다.
+inject 함수는 mobx-react 에 있는 함수로서,   
+컴포넌트에서 스토어에 접근할 수 있게 해줍니다.   
+정확히는, 스토어에 있는 값을 컴포넌트의 props 로 "주입"을 해줍니다.
 
 ### **stores/Counter.js**
 
@@ -277,9 +303,13 @@ export default Counter;
 
 이제 컴포넌트는, 유저 인터페이스와, 인터랙션만 관리하면 되고 상태 관련 로직은 모두 스토어로 분리되었습니다.
 
-리덕스에서는, 우리가 프리젠테이셔널 컴포넌트 / 컨테이너 컴포넌트 라는 개념에 대해서 알아보았었습니다. 단순히 props 값을 가져오기만 해서 받아오는 컴포넌트는 프리젠테이셔널 컴포넌트라고 부르고, 스토어에서 부터 값이나 액션 생성함수를 받아오는 컴포넌트를 컨테이너 컴포넌트라고 부른다고 했었죠.
+리덕스에서는, 우리가 프리젠테이셔널 컴포넌트 / 컨테이너 컴포넌트 라는 개념에 대해서 알아보았었습니다. 
 
-리덕스 진영에서는, 문서에서도 그렇고 생태계 쪽에서도 그렇고 프리젠테이셔널 / 컨테이너로 분리해서 작성하는게 일반적입니다. 반면, MobX 에서는, 딱히 그런걸 명시하지 않습니다. 그래서, 굳이 번거롭게 컨테이너를 강제적으로 만드실 필요는 없습니다. 하지만, 하셔도 무방합니다!
+단순히 props 값을 가져오기만 해서 받아오는 컴포넌트는 프리젠테이셔널 컴포넌트라고 부르고, 스토어에서 부터 값이나 액션 생성함수를 받아오는 컴포넌트를 컨테이너 컴포넌트라고 부른다고 했었죠.
+
+리덕스 진영에서는, 문서에서도 그렇고 생태계 쪽에서도 그렇고 프리젠테이셔널 / 컨테이너로 분리해서 작성하는게 일반적입니다. 
+
+반면, MobX 에서는, 딱히 그런걸 명시하지 않습니다. 그래서, 굳이 번거롭게 컨테이너를 강제적으로 만드실 필요는 없습니다. 하지만, 하셔도 무방합니다!
 
 <br/>
 
@@ -562,7 +592,8 @@ console.log(gs25.total);
 
 ## **action**
 
-상태에 변화를 일으키는것을 action 이라고 부른다고 언급했습니다. 
+상태에 변화를 일으키는것을 action 이라고 부른다고 언급했습니다.   
+
 만약에, 이 변화를 일으키는 함수에 MobX 의 action 을 적용하면 무엇을 할 수 있는지 알아보겠습니다.
 
 우선, 코드 상단에서 action 함수를 불러오고, decorate 쪽에 select 가 action 이라는 것을 명시해줄게요.
@@ -602,8 +633,8 @@ gs25.select('포카칩', 1500);
 console.log(gs25.total);
 ```
 
-action 을 사용함에 있어서의 이점은 나중에 개발자도구에서 변화의 세부 정보를 볼 수 있고,   
-변화를 한꺼번에 일으켜서 변화가 일어날 때 마다 reaction 들이 나타나는것이 아니라,  
+action 을 사용함에 있어서의 이점은 나중에 개발자도구에서 변화의 세부 정보를 볼 수 있고,     
+변화를 한꺼번에 일으켜서 변화가 일어날 때 마다 reaction 들이 나타나는것이 아니라,    
 모든 액션이 끝나고 난 다음에서야 reaction 이 나타나게끔 해줄 수 있습니다.
 
 액션을 한꺼번에 일으키는건, [transaction](https://mobx.js.org/refguide/transaction.html) 을 통해 할 수 있습니다.
@@ -731,16 +762,23 @@ Object {name: "포카칩", price: 1500}
 3100
 ```
 
-transaction 을 통하여 계산 작업은 가장 처음 한번, 그리고 transaction 끝나고 한번 호출이 되었고, 새 데이터 추가 될 때마다 알리는 부분도 3개를 다 추가하고 나서야 딱 한번 콘솔에 마지막 객체가 나타났습니다.
+transaction 을 통하여 계산 작업은 가장 처음 한번,   
+그리고 transaction 끝나고 한번 호출이 되었고,   
+새 데이터 추가 될 때마다 알리는 부분도 3개를 다 추가하고 나서야   
+딱 한번 콘솔에 마지막 객체가 나타났습니다.
 
-액션을 사용하면, 이렇게 성능 개선도 이뤄낼 수 있고 나중에 MobX 개발자 도구를 사용하게 될 때 변화에 대한 더 자세한 정보를 알 수 있게 해줍니다.
+액션을 사용하면, 이렇게 성능 개선도 이뤄낼 수 있고   
+나중에 MobX 개발자 도구를 사용하게 될 때 변화에 대한   
+더 자세한 정보를 알 수 있게 해줍니다.
 
 
 # decorator 문법으로 더 편하게!
 
-decorator 문법은 일종의, 자바스크립트 사투리 라고 생각하시면됩니다.   
+decorator 문법은 일종의, 자바스크립트 사투리 라고 생각하시면됩니다.  
+
 정규 문법은 아니지만, babel 플러그인을 통하여 사용 할 수 있는 문법입니다.  
 이 문법을 사용하면 decorate 함수가 더 이상 필요하지 않고,   
+
 다음과 같이 작성 해 줄 수 있답니다.  
 
 ```javascript
